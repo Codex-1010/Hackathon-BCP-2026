@@ -10,7 +10,7 @@ function renderEventos(lista) {
   contenedor.innerHTML = '';
 
   if (lista.length === 0) {
-    contenedor.innerHTML = '<p class="empty-state">No hay eventos por aquí todavía 😅</p>';
+    contenedor.innerHTML = '<p class="empty-state">No hay eventos por aquí todavía </p>';
     return;
   }
 
