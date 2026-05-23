@@ -21,7 +21,7 @@ function renderEventos(lista) {
     card.innerHTML = `
       <h3>${evento.titulo}</h3>
       <span class="categoria">${evento.categoria}</span>
-      <p class="distancia">📍 ${evento.distancia}</p>
+      <p class="distancia"> ¡ ${evento.distancia}</p>
       <p class="xp">+${evento.xp} XP</p>
       <button onclick="unirme(${evento.id})">Unirme</button>
     `;
