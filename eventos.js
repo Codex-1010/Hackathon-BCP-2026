@@ -20,150 +20,208 @@ const eventosMock = [
     fecha: 'Sáb 24 mayo',
     hora: '8:00 AM',
     dist: '1.2 km',
-    lugar: 'Malecón Checa, SMP',
+    lugar: 'Malecón Checa, San Martín de Porres, Lima, Perú',
     lat: -12.0383,
     lng: -77.0905,
     van: 18,
-    cupo: 30,
+    cupo: 38, // 20 vacantes libres
     xp: 80,
     icon: 'ti-droplet',
     color: 'teal',
     tags: ['Naturaleza', 'Limpieza', 'Lima Norte'],
-    organizador: 'EcoLima ONG',
+    organizador: 'EcoLima ONG'
   },
   {
     id: 'ev2',
     cat: 'Tecnología',
     titulo: 'Taller de programación para niños',
-    desc: 'Enseña a niños de 8 a 12 años los fundamentos de Scratch y lógica computacional. No se necesita experiencia previa en docencia.',
+    desc: 'Enseña lógica de bloques y Scratch a niños de un comedor popular. No necesitas ser experto, solo tener paciencia y ganas de compartir.',
     fecha: 'Dom 25 mayo',
     hora: '10:00 AM',
     dist: '0.8 km',
-    lugar: 'Biblioteca Miraflores',
-    lat: -12.1194,
-    lng: -77.0355,
+    lugar: 'Parque Huiracocha, Santiago de Surco, Lima, Perú',
+    lat: -12.1345,
+    lng: -76.9856,
     van: 11,
-    cupo: 20,
+    cupo: 26, // 15 vacantes libres
     xp: 120,
     icon: 'ti-code',
     color: 'blue',
-    tags: ['Niños', 'Programación', 'Educación'],
-    organizador: 'Code for Peru',
+    tags: ['Educación', 'Tecnología', 'Niños'],
+    organizador: 'CodeKids Perú'
   },
   {
     id: 'ev3',
     cat: 'Educación',
     titulo: 'Reforzamiento escolar — Miraflores',
-    desc: 'Apoyo académico en matemáticas y comunicación para alumnos de primaria en colegios públicos de Miraflores. Horario flexible.',
+    desc: 'Apoya a niños de primaria con sus tareas escolares de matemáticas y comunicación en la biblioteca comunitaria.',
     fecha: 'Jue 29 mayo',
-    hora: '3:30 PM',
+    hora: '4:00 PM',
     dist: '2.1 km',
-    lugar: 'I.E. República de Colombia',
-    lat: -12.1230,
-    lng: -77.0402,
+    lugar: 'Calle Manuel Bonilla 105, Miraflores, Lima, Perú',
+    lat: -12.1212,
+    lng: -77.0294,
     van: 7,
-    cupo: 15,
+    cupo: 22, // 15 vacantes libres
     xp: 60,
     icon: 'ti-book',
     color: 'green',
-    tags: ['Escolar', 'Matemáticas', 'Lima'],
-    organizador: 'Enseña Perú',
+    tags: ['Clases', 'Niños', 'Miraflores'],
+    organizador: 'MuniMiraflores'
   },
   {
     id: 'ev4',
     cat: 'Animales',
-    titulo: 'Campaña de adopción animal',
-    desc: 'Ayuda a encontrar hogares para perros y gatos rescatados. Necesitamos voluntarios para fotografía, difusión y atención en stand.',
+    titulo: 'Campaña de adopción de mascotas',
+    desc: 'Ayuda a gestionar las fichas de adopción, pasear a los perritos rescatados y concientizar a los visitantes sobre la tenencia responsable.',
     fecha: 'Sáb 31 mayo',
     hora: '9:00 AM',
-    dist: '3.4 km',
-    lugar: 'ParqueReducto, Miraflores',
-    lat: -12.1225,
-    lng: -77.0328,
-    van: 24,
-    cupo: 40,
+    dist: '3.5 km',
+    lugar: 'Parque de las Mascotas, Campo de Marte, Jesús María, Lima, Perú',
+    lat: -12.0691,
+    lng: -77.0412,
+    van: 25,
+    cupo: 40, // 15 vacantes libres
     xp: 90,
-    icon: 'ti-paw',
-    color: 'purple',
-    tags: ['Mascotas', 'Adopción', 'Rescate'],
-    organizador: 'Huellitas Felices',
+    icon: 'ti-heart',
+    color: 'coral',
+    tags: ['Mascotas', 'Adopción', 'Jesús María'],
+    organizador: 'Huellitas Felices'
   },
   {
     id: 'ev5',
     cat: 'Salud',
-    titulo: 'Donación de sangre voluntaria',
-    desc: 'Campaña de donación en coordinación con el Hospital Almenara. El proceso completo dura 30 minutos y salvas hasta 3 vidas.',
-    fecha: 'Lun 2 jun',
-    hora: '8:00 AM',
-    dist: '3.5 km',
-    lugar: 'Hospital Almenara, La Victoria',
-    lat: -12.0691,
-    lng: -77.0189,
-    van: 45,
-    cupo: 80,
+    titulo: 'Donación de sangre — Clínica Médica',
+    desc: 'Buscamos voluntarios para orientar a los donantes, entregar los refrigerios post-donación y registrar los datos de los participantes.',
+    fecha: 'Lun 2 junio',
+    hora: '7:30 AM',
+    dist: '1.7 km',
+    lugar: 'Av. Brasil 600, Breña, Lima, Perú',
+    lat: -12.0615,
+    lng: -77.0478,
+    van: 5,
+    cupo: 17, // 12 espacios libres
     xp: 100,
-    icon: 'ti-heart',
-    color: 'coral',
-    tags: ['Salud', 'Sangre', 'Hospital'],
-    organizador: 'Cruz Roja Peruana',
+    icon: 'ti-heart-medical',
+    color: 'purple',
+    tags: ['Salud', 'Donación', 'Breña'],
+    organizador: 'EsSalud'
   },
   {
     id: 'ev6',
-    cat: 'Ambiente',
-    titulo: 'Siembra de árboles — Surco',
-    desc: 'Plantaremos 200 árboles nativos en el parque Huiracocha. Trae zapatos cerrados y ropa que puedas ensuciar. Refrigerio incluido.',
-    fecha: 'Dom 8 jun',
-    hora: '7:30 AM',
-    dist: '4.7 km',
-    lugar: 'Parque Huiracocha, Surco',
-    lat: -12.1118,
-    lng: -77.0075,
-    van: 33,
-    cupo: 60,
+    cat: 'Arte',
+    titulo: 'Pintado de mural comunitario',
+    desc: 'Dale color a las paredes de una loza deportiva abandonada. Diseñaremos un mural enfocado en la unión del barrio. ¡Trae ropa vieja!',
+    fecha: 'Sáb 7 junio',
+    hora: '9:30 AM',
+    dist: '4.2 km',
+    lugar: 'Plaza de Armas de Barranco, Barranco, Lima, Perú',
+    lat: -12.1492,
+    lng: -77.0211,
+    van: 14,
+    cupo: 29, // 15 espacios libres
     xp: 110,
-    icon: 'ti-trees',
-    color: 'green',
-    tags: ['Reforestación', 'Naturaleza', 'Surco'],
-    organizador: 'Verde Lima',
+    icon: 'ti-palette',
+    color: 'amber',
+    tags: ['Arte', 'Cultura', 'Barranco'],
+    organizador: 'Colectivo ColorBarrio'
   },
+  // ─── 5 NUEVOS SITIOS AGREGADOS (SITIOS 7 AL 11) ───────────────────────────
   {
     id: 'ev7',
-    cat: 'Arte',
-    titulo: 'Mural comunitario en Villa María',
-    desc: 'Pinta junto a artistas locales un mural de 40 metros en el jirón principal de Villa María del Triunfo. Sin experiencia necesaria.',
-    fecha: 'Sáb 14 jun',
-    hora: '9:00 AM',
-    dist: '8.2 km',
-    lugar: 'Jr. Las Flores, Villa María del Triunfo',
-    lat: -12.0090,
-    lng: -76.9910,
-    van: 16,
-    cupo: 25,
-    xp: 95,
-    icon: 'ti-palette',
-    color: 'purple',
-    tags: ['Arte urbano', 'Mural', 'Comunidad'],
-    organizador: 'Murales sin Fronteras',
+    cat: 'Ambiente',
+    titulo: 'Biohuerto urbano y compostaje',
+    desc: 'Aprende y ayuda a implementar un sistema de compostaje comunal y siembra de hortalizas para el beneficio de las ollas comunes.',
+    fecha: 'Dom 8 junio',
+    hora: '8:30 AM',
+    dist: '5.1 km',
+    lugar: 'Av. Separadora Industrial, Villa El Salvador, Lima, Perú',
+    lat: -12.2105,
+    lng: -76.9362,
+    van: 8,
+    cupo: 20, // 12 espacios libres
+    xp: 85,
+    icon: 'ti-leaf',
+    color: 'teal',
+    tags: ['Naturaleza', 'Huerto', 'Lima Sur'],
+    organizador: 'VES Verde'
   },
   {
     id: 'ev8',
     cat: 'Educación',
-    titulo: 'Feria de ciencias itinerante',
-    desc: 'Monta experimentos científicos simples para niños en asentamientos humanos de SJL. Se proporciona todo el material.',
-    fecha: 'Dom 15 jun',
-    hora: '11:00 AM',
-    dist: '5.9 km',
-    lugar: 'AA.HH. Enrique Milla, SJL',
-    lat: -12.0143,
-    lng: -76.9570,
-    van: 9,
-    cupo: 20,
-    xp: 70,
-    icon: 'ti-flask',
-    color: 'blue',
-    tags: ['Ciencia', 'Niños', 'SJL'],
-    organizador: 'Científicos sin Frontera',
+    titulo: 'Feria del libro itinerante y cuentacuentos',
+    desc: 'Apoya en la organización de los módulos de lectura al aire libre y participa narrando historias dinámicas para activar la comprensión lectora.',
+    fecha: 'Mié 11 junio',
+    hora: '3:00 PM',
+    dist: '3.8 km',
+    lugar: 'Plaza de Armas de Los Olivos, Los Olivos, Lima, Perú',
+    lat: -11.9619,
+    lng: -77.0702,
+    van: 12,
+    cupo: 30, // 18 espacios libres
+    xp: 75,
+    icon: 'ti-balloons',
+    color: 'green',
+    tags: ['Cultura', 'Niños', 'Lima Norte'],
+    organizador: 'Red de Bibliotecas Urbanas'
   },
+  {
+    id: 'ev9',
+    cat: 'Salud',
+    titulo: 'Taller preventivo de nutrición',
+    desc: 'Asiste a los nutricionistas en el armado de canastas piloto saludables, entrega de guías informativas y control de peso/talla para el adulto mayor.',
+    fecha: 'Vie 13 junio',
+    hora: '9:00 AM',
+    dist: '2.5 km',
+    lugar: 'Parque Central de San Juan de Lurigancho, Lima, Perú',
+    lat: -11.9868,
+    lng: -77.0051,
+    van: 15,
+    cupo: 35, // 20 espacios libres
+    xp: 95,
+    icon: 'ti-apple',
+    color: 'purple',
+    tags: ['Salud', 'Nutrición', 'Lima Este'],
+    organizador: 'VidaSana Perú'
+  },
+  {
+    id: 'ev10',
+    cat: 'Arte',
+    titulo: 'Clase abierta de teatro callejero',
+    desc: 'Colabora en la logística, entrega de utilería y convocatoria de vecinos para una puesta en escena interactiva sobre la seguridad ciudadana.',
+    fecha: 'Sáb 14 junio',
+    hora: '5:00 PM',
+    dist: '1.9 km',
+    lugar: 'Parque de la Exposición, Cercado de Lima, Lima, Perú',
+    lat: -12.0604,
+    lng: -77.0368,
+    van: 10,
+    cupo: 25, // 15 espacios libres
+    xp: 115,
+    icon: 'ti-masks-theater',
+    color: 'amber',
+    tags: ['Teatro', 'Comunidad', 'Centro Lima'],
+    organizador: 'Teatro del Barrio'
+  },
+  {
+    id: 'ev11',
+    cat: 'Animales',
+    titulo: 'Construcción de refugios temporales',
+    desc: 'Armado de casitas con materiales reciclados (madera y plástico) para proteger del frío del invierno a los animales comunitarios del sector.',
+    fecha: 'Dom 15 junio',
+    hora: '8:00 AM',
+    dist: '6.4 km',
+    lugar: 'Av. Las Lomas, San Juan de Miraflores, Lima, Perú',
+    lat: -12.1642,
+    lng: -76.9631,
+    van: 6,
+    cupo: 30, // 24 espacios libres
+    xp: 130,
+    icon: 'ti-home-heart',
+    color: 'coral',
+    tags: ['Mascotas', 'Reciclaje', 'Lima Sur'],
+    organizador: 'Amigos de 4 Patas'
+  }
 ];
 
 // ─── ESTADO LOCAL ─────────────────────────────────────────────────────────────
@@ -250,6 +308,10 @@ function openModal(id) {
   const pct = Math.round((ev.van / ev.cupo) * 100);
 
   const content = document.getElementById('modal-content');
+  
+  // Codificamos la dirección limpia directamente desde el objeto
+  const direccionCodificada = encodeURIComponent(ev.lugar);
+
   content.innerHTML = `
     <div class="modal-icon" style="background:var(--${ev.color}-50)">
       <i class="ti ${ev.icon}" style="color:var(--${ev.color}-400);font-size:32px;" aria-hidden="true"></i>
@@ -260,8 +322,23 @@ function openModal(id) {
 
     <div class="modal-details">
       <div class="modal-detail-row"><i class="ti ti-calendar"></i><span>${ev.fecha} · ${ev.hora}</span></div>
-      <div class="modal-detail-row"><i class="ti ti-map-pin"></i><span>${ev.lugar} (${ev.dist})</span></div>
       <div class="modal-detail-row"><i class="ti ti-building"></i><span>${ev.organizador}</span></div>
+      
+      <div class="modal-detail-row" style="margin-top: 12px; font-weight: 600; color: var(--color-text-primary);">
+        <i class="ti ti-map-pin"></i><span>${ev.lugar.split(',')[0]} (${ev.dist})</span>
+      </div>
+      
+      <div style="width: 100%; height: 220px; border-radius: 12px; overflow: hidden; margin-top: 8px; border: 1px solid var(--color-border-tertiary); background: #eee;">
+        <iframe 
+          src="http://localhost:3000/generar-mapa?direccion=${direccionCodificada}" 
+          width="100%" 
+          height="100%" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
     </div>
 
     <div class="modal-tags">
