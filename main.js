@@ -90,20 +90,45 @@ function toggleJoin(cardId, btn) {
 }
 
 
-/*
-Creacion del Mock data para la simulaciones sin depender de la base de datos.
-  const  datosJason= [
-    {
-     
-    }
-    {
-    
-    }
-  ];
 
-function datosSimulacion(){
-  //
-  
-  
-}
-  */
+ //funcion para la barra de exp
+ let xpActual = 67;
+ const xpMaximo = 1000;
+
+ //funcion actualizar barra
+ function actualizarBarra(){
+    const barra = document.getElementById("progreso-bar");
+    const texto = document.getElementById("xp-texto");
+    const contenedorBarra = document.querySelector(".xp-bar-wrap");
+
+    //operacion para calcular el xp
+    const porcentaje = (xpActual / xpMaximo) * 100;
+
+    barra.style.width = `${Math.min(porcentaje, 100)}%`;
+
+    texto.textContent = `${xpActual} / ${xpMaximo} XP`;
+
+    if(contenedorBarra){
+        contenedorBarra.setAttribute("aria-valuenow", xpActual);
+    }
+ }
+
+ function toggleJoin(cardId, boton){
+  const idEvento = parseInt(cardId.replace("card",""));
+
+  const evento = eventosMock.find(e => e.id === idEvento);
+
+  if(!evento ) return;
+
+  if(!boton.classList.contains("joined")){
+      boton.classList.add("joined");
+      boton.textContent = "Inscrito";
+      boton.style.background = "var(--teal-600)";
+
+      xpActual += evento.xp;
+
+      console.log('!Te uniste a: ')
+
+  }
+
+ }
