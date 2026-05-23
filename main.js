@@ -40,7 +40,7 @@ function renderizarEventos(eventos) {
             <div class="event-meta">
               <span><i class="ti ti-calendar" aria-hidden="true"></i> ${ev.fecha}</span>
               <span><i class="ti ti-map-pin" aria-hidden="true"></i> ${ev.dist}</span>
-              <span><i class="ti ti-users" aria-hidden="true"></i> ${ev.van} van</span>
+              <span><i class="ti ti-users" aria-hidden="true"></i> ${ev.van} asistentes</span>
             </div>
           </div>
         </div>
