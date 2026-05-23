@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Impacto Cerca</title>
+  <link rel="stylesheet" href="styless.css">
+</head>
+<body>
+
+  <!-- Encabezado de la aplicación -->
+  <header>
+    <h2 class="sr-only">Impacto Cerca — App de voluntariado y participación comunitaria para jóvenes</h2>
+    <div class="header">
+      <div class="logo">Impacto<span>Cerca</span></div>
+      <div class="header-right">
+        <div class="notif" aria-label="Notificaciones">
+          <i class="ti ti-bell" style="font-size:20px; color:white;" aria-hidden="true"></i>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="avatar">AV</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal de la App -->
+  <div class="app">
+
+    <!-- Barra de Racha y Progreso -->
+    <div class="streak-bar">
+      <span class="streak-fire" aria-hidden="true">
+        <i class="ti ti-flame" style="font-size:16px; color:#EF9F27;"></i>
+      </span>
+      <span>Racha: <strong>7 días</strong></span>
+      <div class="xp-bar-wrap" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso XP">
+        <div class="xp-bar"></div>
+      </div>
+      <span class="xp-label">67 / 1000 XP</span>
+      <span class="level-badge">Nv. 4</span>
+    </div>
+
+    <!-- Navegación por Pestañas -->
+    <div class="nav-tabs" role="tablist">
+      <div class="nav-tab active" role="tab" aria-selected="true" onclick="switchTab('explorar', this)">
+        <i class="ti ti-map-2" aria-hidden="true"></i>Explorar
+      </div>
+      <div class="nav-tab" role="tab" onclick="switchTab('ranking', this)">
+        <i class="ti ti-trophy" aria-hidden="true"></i>Ranking
+      </div>
+      <div class="nav-tab" role="tab" onclick="switchTab('perfil', this)">
+        <i class="ti ti-user-circle" aria-hidden="true"></i>Mi perfil
+      </div>
+    </div>
+
+    <!-- SECCIÓN: EXPLORAR -->
+    <div id="explorar" class="section active">
+      <div class="search-wrap">
+        <div class="search-inner">
+          <i class="ti ti-search" aria-hidden="true"></i>
+          <input type="text" placeholder="Buscar eventos, causas..." aria-label="Buscar eventos">
+        </div>
+      </div>
+
+      <!-- Filtros rápidos -->
+      <div class="filter-strip" role="group" aria-label="Filtros por categoría">
+        <div class="chip active" onclick="filterChip(this)">Todos</div>
+        <div class="chip" onclick="filterChip(this)"><i class="ti ti-leaf" aria-hidden="true"></i> Ambiente</div>
+        <div class="chip" onclick="filterChip(this)"><i class="ti ti-school" aria-hidden="true"></i> Educación</div>
+        <div class="chip" onclick="filterChip(this)"><i class="ti ti-device-laptop" aria-hidden="true"></i> Tecnología</div>
+        <div class="chip" onclick="filterChip(this)"><i class="ti ti-paw" aria-hidden="true"></i> Animales</div>
+        <div class="chip" onclick="filterChip(this)"><i class="ti ti-heart" aria-hidden="true"></i> Social</div>
+      </div>
+
+      <!-- Mapa -->
+      <div class="map-placeholder" role="img" aria-label="Mapa de eventos cercanos">
+        <svg width="100%" height="100%" style="position:absolute;inset:0;" aria-hidden="true">
+          <line x1="0" y1="60" x2="100%" y2="60" stroke="var(--teal-100)" stroke-width="0.5"/>
+          <line x1="0" y1="120" x2="100%" y2="120" stroke="var(--teal-100)" stroke-width="0.5"/>
+          <line x1="100" y1="0" x2="100" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
+          <line x1="220" y1="0" x2="220" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
+          <line x1="340" y1="0" x2="340" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
+          <line x1="460" y1="0" x2="460" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
+          <circle cx="50%" cy="50%" r="6" fill="#1D9E75"/>
+          <circle cx="50%" cy="50%" r="18" fill="none" stroke="#1D9E75" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+          <circle cx="50%" cy="50%" r="38" fill="none" stroke="#1D9E75" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+        <div class="map-dot" style="background:#D85A30;color:#D85A30;top:28%;left:35%">
+          <span style="font-size:7px;color:white;position:relative;z-index:1;font-weight:500;">A</span>
+          <div class="map-label" style="color:#712B13">Limpieza río</div>
+        </div>
+        <div class="map-dot" style="background:#378ADD;color:#378ADD;top:55%;left:62%">
+          <span style="font-size:7px;color:white;position:relative;z-index:1;font-weight:500;">B</span>
+          <div class="map-label" style="color:#0C447C">Taller tech</div>
+        </div>
+        <div class="map-dot" style="background:#639922;color:#639922;top:38%;left:70%">
+          <span style="font-size:7px;color:white;position:relative;z-index:1;font-weight:500;">C</span>
+          <div class="map-label" style="color:#27500A">Educación</div>
+        </div>
+        <div class="map-near">
+          <i class="ti ti-navigation" style="font-size:12px;color:var(--teal-600);"></i>
+          San Isidro, Lima
+        </div>
+      </div>
+
+      <!-- Lista de Eventos -->
+      <div class="events-list" id="lista-eventos">
+
+      </div>
+
+    <!-- SECCIÓN: RANKING -->
+    <div id="ranking" class="section">
+      <div class="ranking-wrap">
+        <div class="ranking-hero">
+          <div class="rank-num">#8</div>
+          <div class="rank-info">
+            <div class="rank-title">Tu posición esta semana</div>
+            <div class="rank-sub">Subiste 3 puestos desde el lunes</div>
+          </div>
+        </div>
+        <div class="rank-list" role="list">
+          <div class="rank-item" role="listitem">
+            <div class="rank-pos gold" aria-label="Posición 1">1</div>
+            <div class="rank-av" style="background:#639922">LM</div>
+            <div class="rank-name">Lucía Mendoza</div>
+            <div class="rank-pts">2,840</div>
+            <div class="rank-badge">Líder</div>
+          </div>
+          <div class="rank-item" role="listitem">
+            <div class="rank-pos silver" aria-label="Posición 2">2</div>
+            <div class="rank-av" style="background:#1D9E75">CR</div>
+            <div class="rank-name">Carlos Rivas</div>
+            <div class="rank-pts">2,610</div>
+          </div>
+          <div class="rank-item" role="listitem">
+            <div class="rank-pos bronze" aria-label="Posición 3">3</div>
+            <div class="rank-av" style="background:#378ADD">SF</div>
+            <div class="rank-name">Sofía Flores</div>
+            <div class="rank-pts">2,200</div>
+          </div>
+          <div class="rank-item" role="listitem">
+            <div class="rank-pos" aria-label="Posición 4">4</div>
+            <div class="rank-av" style="background:#D85A30">JP</div>
+            <div class="rank-name">Javier Paredes</div>
+            <div class="rank-pts">1,980</div>
+          </div>
+          <div class="rank-item" role="listitem">
+            <div class="rank-pos" aria-label="Posición 5">5</div>
+            <div class="rank-av" style="background:#7F77DD">ME</div>
+            <div class="rank-name">María Espinoza</div>
+            <div class="rank-pts">1,750</div>
+          </div>
+          <div class="rank-item me" role="listitem" aria-label="Tu posición">
+            <div class="rank-pos" style="color:var(--green-600)" aria-label="Posición 8">8</div>
+            <div class="rank-av" style="background:var(--green-600)">AV</div>
+            <div class="rank-name" style="font-weight:500;color:var(--green-600)">Tú — Alex Vargas</div>
+            <div class="rank-pts">1,240</div>
+            <div class="rank-badge">Tú</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN: PERFIL -->
+    <div id="perfil" class="section">
+      <div class="profile-wrap">
+        <div class="profile-header">
+          <div class="profile-avatar">AV</div>
+          <div>
+            <div class="profile-name">Alex Vargas</div>
+            <div class="profile-sub">Nivel 4 · Voluntario Activo</div>
+            <div class="profile-loc"><i class="ti ti-map-pin" style="font-size:12px;" aria-hidden="true"></i> San Isidro, Lima</div>
+          </div>
+        </div>
+
+        <div class="stats-row" role="list">
+          <div class="stat-card" role="listitem">
+            <div class="stat-num">12</div>
+            <div class="stat-lbl">Eventos</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-num">1,240</div>
+            <div class="stat-lbl">Puntos XP</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-num">7</div>
+            <div class="stat-lbl">Días racha</div>
+          </div>
+        </div>
+
+        <!-- Insignias -->
+        <div class="badges-wrap">
+          <div class="badges-title">Insignias</div>
+          <div class="badges-grid" role="list">
+            <div class="badge-item" role="listitem">
+              <div class="badge-circle" style="background:var(--green-50)"><span style="font-size:22px" role="img" aria-label="Planta">🌱</span></div>
+              <div class="badge-name" style="color:var(--green-600)">Primer paso</div>
+            </div>
+            <div class="badge-item" role="listitem">
+              <div class="badge-circle" style="background:var(--blue-50)"><span style="font-size:22px" role="img" aria-label="Rayo">⚡</span></div>
+              <div class="badge-name" style="color:var(--blue-400)">Racha 7d</div>
+            </div>
+            <div class="badge-item" role="listitem">
+              <div class="badge-circle" style="background:var(--amber-50)"><span style="font-size:22px" role="img" aria-label="Estrella">⭐</span></div>
+              <div class="badge-name" style="color:var(--amber-400)">Top 10</div>
+            </div>
+            <div class="badge-item" role="listitem">
+              <div class="badge-circle locked"><i class="ti ti-lock" aria-hidden="true"></i></div>
+              <div class="badge-name">Líder</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historial -->
+        <div class="history-wrap">
+          <div class="history-title">Historial de impacto</div>
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--coral-50)"><i class="ti ti-droplet" style="color:var(--coral-400);" aria-hidden="true"></i></div>
+            <div class="history-name">Limpieza playa La Herradura</div>
+            <div class="history-pts">+80 XP</div>
+          </div>
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--blue-50)"><i class="ti ti-device-laptop" style="color:var(--blue-400);" aria-hidden="true"></i></div>
+            <div class="history-name">Hackathon Jóvenes BCP 2026</div>
+            <div class="history-pts">+200 XP</div>
+          </div>
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--green-50)"><i class="ti ti-book" style="color:var(--green-400);" aria-hidden="true"></i></div>
+            <div class="history-name">Tutoría en Villa El Salvador</div>
+            <div class="history-pts">+60 XP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- Fin de .app -->
+
+  <script src="main.js"></script>
+</body>
+</html>   
