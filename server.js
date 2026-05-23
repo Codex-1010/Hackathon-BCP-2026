@@ -12,20 +12,20 @@ app.get('/generar-mapa', async (req, res) => {
     const direccion = req.query.direccion;
 
     if (!direccion) {
-        return res.status(400).send('<h1>Error: Falta la dirección (?direccion=...)</h1>');
+        return res.send(generarMapaPorDefecto('No se encontró la ubicación exacta'));
     }
 
     try {
         // Geocodificación usando el servicio gratuito Nominatim de OpenStreetMap
-        const urlGeocode = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&limit=1`;
-        
+        const urlGeocode = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&countrycodes=pe&limit=1`;
+    
         const response = await fetch(urlGeocode, {
             headers: { 'User-Agent': 'ImpactoCercaApp/1.0' }
         });
         const data = await response.json();
 
         if (!data || data.length === 0) {
-            return res.status(404).send('<h1>Error: Dirección no encontrada</h1>');
+            return res.send(generarMapaPorDefecto("Dirección no localizada. Mostrando mapa general."));
         }
 
         const lat = data[0].lat;
@@ -92,6 +92,39 @@ app.get('/obtener-iframe', (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.send(iframeHTML);
 });
+
+function generarMapaPorDefecto(mensaje) {
+    // Coordenadas del centro de Lima o San Isidro como respaldo
+    const latDefault = -12.097; 
+    const lonDefault = -77.035;
+    
+    return `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <style>html, body, #map { height: 100%; margin: 0; }</style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            const map = L.map('map').setView([${latDefault}, ${lonDefault}], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            
+            // Añadimos un aviso decorativo o un popup
+            L.popup()
+                .setLatLng([${latDefault}, ${lonDefault}])
+                .setContent('${mensaje}')
+                .openOn(map);
+        </script>
+    </body>
+    </html>
+    `;
+}
 
 app.listen(PORT, () => {
     console.log(`Servidor de mapas corriendo en: http://localhost:${PORT}`);
