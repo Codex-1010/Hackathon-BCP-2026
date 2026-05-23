@@ -126,7 +126,35 @@ function datosSimulacion(){
 
 
   */
+// --- LÓGICA DE MODO OSCURO ---
+const themeToggleBtn = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
 
+// 1. Verificar si hay un tema guardado previamente en el navegador
+const currentTheme = localStorage.getItem('theme');
+if (currentTheme) {
+    document.body.setAttribute('data-theme', currentTheme);
+    if (currentTheme === 'dark') {
+        themeIcon.className = 'ti ti-sun'; // Cambia el icono a un sol
+    }
+}
+
+// 2. Escuchar el evento click para alternar entre modos
+themeToggleBtn.addEventListener('click', () => {
+    let theme = 'light';
+    
+    if (document.body.getAttribute('data-theme') !== 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.className = 'ti ti-sun';
+        theme = 'dark';
+    } else {
+        document.body.removeAttribute('data-theme');
+        themeIcon.className = 'ti ti-moon';
+    }
+    
+    // 3. Persistir la selección del usuario
+    localStorage.setItem('theme', theme);
+});
 // ==========================================
 // CONFIGURACIÓN DEL MAPA INTERACTIVO @CODEX
 // ==========================================
