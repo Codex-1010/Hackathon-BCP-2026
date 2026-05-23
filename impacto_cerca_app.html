@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Impacto Cerca</title>
   <link rel="stylesheet" href="styless.css">
-  <!-- Tabler Icons CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
 </head>
 <body>
   <!-- Encabezado de la aplicación -->
@@ -72,35 +76,9 @@
         <div class="chip" onclick="filterChip(this)"><i class="ti ti-heart" aria-hidden="true"></i> Salud</div>
       </div>
 
-      <!-- Mapa -->
-      <div class="map-placeholder" role="img" aria-label="Mapa de eventos cercanos">
-        <svg width="100%" height="100%" style="position:absolute;inset:0;" aria-hidden="true">
-          <line x1="0" y1="60" x2="100%" y2="60" stroke="var(--teal-100)" stroke-width="0.5"/>
-          <line x1="0" y1="120" x2="100%" y2="120" stroke="var(--teal-100)" stroke-width="0.5"/>
-          <line x1="100" y1="0" x2="100" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
-          <line x1="220" y1="0" x2="220" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
-          <line x1="340" y1="0" x2="340" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
-          <line x1="460" y1="0" x2="460" y2="100%" stroke="var(--teal-100)" stroke-width="0.5"/>
-          <circle cx="50%" cy="50%" r="6" fill="#1D9E75"/>
-          <circle cx="50%" cy="50%" r="18" fill="none" stroke="#1D9E75" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
-          <circle cx="50%" cy="50%" r="38" fill="none" stroke="#1D9E75" stroke-width="0.5" opacity="0.3"/>
-        </svg>
-        <div class="map-dot" style="background:#D85A30;color:#D85A30;top:28%;left:35%">
-          <span style="font-size:7px;color:white;position:relative;z-index:1;font-weight:500;">A</span>
-          <div class="map-label" style="color:#712B13">Limpieza río</div>
-        </div>
-        <div class="map-dot" style="background:#378ADD;color:#378ADD;top:55%;left:62%">
-          <span style="font-size:7px;color:white;position:relative;z-index:1;font-weight:500;">B</span>
-          <div class="map-label" style="color:#0C447C">Taller tech</div>
-        </div>
-        <div class="map-dot" style="background:#639922;color:#639922;top:38%;left:70%">
-          <span style="font-size:7px;color:white;position:relative;z-index:1;font-weight:500;">C</span>
-          <div class="map-label" style="color:#27500A">Educación</div>
-        </div>
-        <div class="map-near">
-          <i class="ti ti-navigation" style="font-size:12px;color:var(--teal-600);"></i>
-          San Isidro, Lima
-        </div>
+      <!-- Mapa @CODEX--> 
+      <div class="map-placeholder" id="contenedor-mapa" role="img" aria-label="Mapa de eventos cercanos">
+
       </div>
 
       <!-- Lista de Eventos -->
