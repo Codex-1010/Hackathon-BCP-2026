@@ -1,145 +1,214 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Impacto Cerca</title>
   <link rel="stylesheet" href="styless.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
-  
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-</head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
-  <!-- Encabezado de la aplicación -->
+
+  <div id="splash" class="splash-overlay" role="dialog" aria-modal="true" aria-label="Bienvenida">
+    <div class="splash-card">
+      <div class="splash-logo">Impacto<span>Cerca</span></div>
+      <div class="splash-emoji" role="img" aria-label="Manos levantadas">�</div>
+      <h1 class="splash-title">Haz la diferencia<br>cerca de ti</h1>
+      <p class="splash-sub">Encuentra eventos de voluntariado en tu barrio, suma XP y sube al ranking comunal.</p>
+      <button class="splash-btn" onclick="closeSplash()">Comenzar →</button>
+    </div>
+  </div>
+
+  <div id="login-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Iniciar sesión">
+    <div class="login-card">
+      <button class="modal-close login-close" onclick="closeLogin()" aria-label="Cerrar inicio de sesión"><i class="ti ti-x"></i></button>
+      <div class="login-badge">Impacto Cerca</div>
+      <h2 class="login-title">Bienvenido</h2>
+      <p class="login-sub">Ingresa tu nombre para empezar a explorar eventos cerca de ti.</p>
+      <form id="login-form" class="login-form" onsubmit="handleLogin(event)">
+        <label for="login-name">Nombre</label>
+        <input id="login-name" name="name" type="text" placeholder="Tu nombre" autocomplete="name" required>
+        <label for="login-pass">Contraseña</label>
+        <input id="login-pass" name="password" type="password" placeholder="1234" autocomplete="current-password" required>
+        <button type="submit" class="login-submit">Entrar</button>
+        <button type="button" class="login-guest" onclick="loginAsGuest()">Ingresar como invitado</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+
+  <div id="modal-overlay" class="modal-overlay" onclick="closeModal()" role="dialog" aria-modal="true" aria-label="Detalle del evento">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()" aria-label="Cerrar"><i class="ti ti-x"></i></button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
   <header>
+    <h2 class="sr-only">Impacto Cerca — App de voluntariado y participación comunitaria para jóvenes</h2>
     <div class="header">
       <div class="logo">Impacto<span>Cerca</span></div>
       <div class="header-right">
-        <div class="notif" aria-label="Notificaciones">
+        <button class="theme-switch" type="button" aria-label="Cambiar tema" onclick="toggleTheme()"><i class="ti ti-moon"></i></button>
+        <button class="notif" aria-label="Notificaciones" onclick="showToast('¡Tienes 2 nuevos eventos cerca tuyo!')">
           <i class="ti ti-bell" style="font-size:20px; color:white;" aria-hidden="true"></i>
           <div class="notif-dot"></div>
-        </div>
-        <div class="avatar">AV</div>
+        </button>
+        <div class="avatar" aria-label="Perfil de Alex Vargas">AV</div>
       </div>
     </div>
   </header>
 
-  <!-- Contenedor Principal de la App -->
+  <div class="streak-bar">
+    <span class="streak-fire" aria-hidden="true">
+      <i class="ti ti-flame" style="font-size:16px; color:#EF9F27;"></i>
+    </span>
+    <span>Racha: <strong>7 días</strong></span>
+    <div class="xp-bar-wrap" role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="1000" aria-label="Progreso XP: 67 de 1000">
+      <div class="xp-bar" id="xp-bar-fill" style="width:6.7%"></div>
+    </div>
+    <span class="xp-label" id="xp-label-display">67 / 1000 XP</span>
+    <span class="level-badge">Nv. 4</span>
+  </div>
+
+
   <div class="app">
 
-    <!-- Barra de Racha y Progreso -->
-    <div class="streak-bar">
-      <span class="streak-fire" aria-hidden="true">
-        <i class="ti ti-flame" style="font-size:16px; color:#EF9F27;"></i>
-      </span>
-      <span>Racha: <strong>7 días</strong></span>
-      <div class="xp-bar-wrap" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso XP">
-        <div class="xp-bar"></div>
-      </div>
-      <span class="xp-label">67 / 1000 XP</span>
-      <span class="level-badge">Nv. 4</span>
-    </div>
-
-    <!-- Navegación por Pestañas -->
+    
     <div class="nav-tabs" role="tablist">
-      <div class="nav-tab active" role="tab" aria-selected="true" onclick="switchTab('explorar', this)">
+      <button class="nav-tab active" role="tab" aria-selected="true" onclick="switchTab('explorar', this)">
         <i class="ti ti-map-2" aria-hidden="true"></i>Explorar
-      </div>
-      <div class="nav-tab" role="tab" aria-selected="false" onclick="switchTab('ranking', this)">
+      </button>
+      <button class="nav-tab" role="tab" aria-selected="false" onclick="switchTab('ranking', this)">
         <i class="ti ti-trophy" aria-hidden="true"></i>Ranking
-      </div>
-      <div class="nav-tab" role="tab" aria-selected="false" onclick="switchTab('perfil', this)">
-        <i class="ti ti-user-circle" aria-hidden="true"></i>Mi perfil
-      </div>
+      </button>
+      <button class="nav-tab" role="tab" aria-selected="false" onclick="switchTab('mis-eventos', this)">
+        <i class="ti ti-calendar-check" aria-hidden="true"></i>Mis eventos
+      </button>
+      <button class="nav-tab" role="tab" aria-selected="false" onclick="switchTab('perfil', this)">
+        <i class="ti ti-user-circle" aria-hidden="true"></i>Perfil
+      </button>
     </div>
 
-    <!-- SECCIÓN: EXPLORAR -->
+    
     <div id="explorar" class="section active">
       <div class="search-wrap">
         <div class="search-inner">
           <i class="ti ti-search" aria-hidden="true"></i>
-          <input type="text" placeholder="Buscar eventos, causas..." aria-label="Buscar eventos" autocomplete="off">
+          <input type="text" id="search-input" placeholder="Buscar eventos, causas..." aria-label="Buscar eventos" autocomplete="off" oninput="searchEventos(this.value)">
+          <button class="search-clear" id="search-clear" onclick="clearSearch()" aria-label="Limpiar búsqueda" style="display:none">
+            <i class="ti ti-x" style="font-size:14px;"></i>
+          </button>
         </div>
       </div>
 
-      <!-- Filtros rápidos -->
+     
       <div class="filter-strip" role="group" aria-label="Filtros por categoría">
-        <div class="chip active" onclick="filterChip(this)">Todos</div>
-        <div class="chip" onclick="filterChip(this)"><i class="ti ti-leaf" aria-hidden="true"></i> Ambiente</div>
-        <div class="chip" onclick="filterChip(this)"><i class="ti ti-school" aria-hidden="true"></i> Educación</div>
-        <div class="chip" onclick="filterChip(this)"><i class="ti ti-device-laptop" aria-hidden="true"></i> Tecnología</div>
-        <div class="chip" onclick="filterChip(this)"><i class="ti ti-paw" aria-hidden="true"></i> Animales</div>
-        <div class="chip" onclick="filterChip(this)"><i class="ti ti-heart" aria-hidden="true"></i> Salud</div>
+        <button class="chip active" onclick="filterChip(this)" data-cat="Todos">Todos</button>
+        <button class="chip" onclick="filterChip(this)" data-cat="Ambiente"><i class="ti ti-leaf" aria-hidden="true"></i> Ambiente</button>
+        <button class="chip" onclick="filterChip(this)" data-cat="Educación"><i class="ti ti-school" aria-hidden="true"></i> Educación</button>
+        <button class="chip" onclick="filterChip(this)" data-cat="Tecnología"><i class="ti ti-device-laptop" aria-hidden="true"></i> Tecnología</button>
+        <button class="chip" onclick="filterChip(this)" data-cat="Animales"><i class="ti ti-paw" aria-hidden="true"></i> Animales</button>
+        <button class="chip" onclick="filterChip(this)" data-cat="Salud"><i class="ti ti-heart" aria-hidden="true"></i> Salud</button>
+        <button class="chip" onclick="filterChip(this)" data-cat="Arte"><i class="ti ti-palette" aria-hidden="true"></i> Arte</button>
       </div>
 
-      <!-- Mapa @CODEX--> 
-      <div class="map-placeholder" id="contenedor-mapa" role="img" aria-label="Mapa de eventos cercanos">
+     
+      <div class="results-meta" id="results-meta" aria-live="polite"></div>
 
+      
+      <div class="map-wrap">
+        <div id="map" aria-label="Mapa de eventos cercanos en Lima"></div>
+        <div class="map-legend-bar" aria-hidden="true">
+          <span class="legend-pill" style="background:#D85A30">🌿 Ambiente</span>
+          <span class="legend-pill" style="background:#378ADD">💻 Tecnología</span>
+          <span class="legend-pill" style="background:#639922">📚 Educación</span>
+          <span class="legend-pill" style="background:#7F77DD">🐾 Animales</span>
+          <span class="legend-pill" style="background:#BA7517">❤️ Salud</span>
+          <span class="legend-pill" style="background:#C44D8B">🎨 Arte</span>
+        </div>
       </div>
 
       <!-- Lista de Eventos -->
-      <div class="events-list" id="lista-eventos">
+      <div class="events-list" id="lista-eventos" role="list">
         <!-- Se llena dinámicamente con eventos.js -->
       </div>
     </div>
 
-    <!-- SECCIÓN: RANKING -->
+   
     <div id="ranking" class="section">
       <div class="ranking-wrap">
+        <!-- Selector de período -->
+        <div class="period-tabs" role="group" aria-label="Período del ranking">
+          <button class="period-tab active" onclick="switchPeriod('semana', this)">Esta semana</button>
+          <button class="period-tab" onclick="switchPeriod('mes', this)">Este mes</button>
+          <button class="period-tab" onclick="switchPeriod('total', this)">Total</button>
+        </div>
+
         <div class="ranking-hero">
           <div class="rank-num">#8</div>
           <div class="rank-info">
             <div class="rank-title">Tu posición esta semana</div>
-            <div class="rank-sub">Subiste 3 puestos desde el lunes</div>
+            <div class="rank-sub">⬆ Subiste 3 puestos desde el lunes</div>
+          </div>
+          <div class="rank-trend">
+            <i class="ti ti-trending-up" style="font-size:28px;color:var(--green-100);opacity:0.7;"></i>
           </div>
         </div>
-        <div class="rank-list" role="list">
-          <div class="rank-item" role="listitem">
-            <div class="rank-pos gold" aria-label="Posición 1">1</div>
-            <div class="rank-av" style="background:#639922">LM</div>
-            <div class="rank-name">Lucía Mendoza</div>
-            <div class="rank-pts">2,840</div>
-            <div class="rank-badge">Líder</div>
+
+      
+        <div class="podio" aria-label="Podio top 3">
+          <div class="podio-item" style="order:1;margin-top:24px">
+            <div class="podio-av" style="background:#378ADD">CR</div>
+            <div class="podio-name">Carlos R.</div>
+            <div class="podio-pts">2,610</div>
+            <div class="podio-place silver-bg">2</div>
           </div>
-          <div class="rank-item" role="listitem">
-            <div class="rank-pos silver" aria-label="Posición 2">2</div>
-            <div class="rank-av" style="background:#1D9E75">CR</div>
-            <div class="rank-name">Carlos Rivas</div>
-            <div class="rank-pts">2,610</div>
+          <div class="podio-item" style="order:0">
+            <div class="podio-crown">👑</div>
+            <div class="podio-av" style="background:#639922;width:52px;height:52px;font-size:18px;">LM</div>
+            <div class="podio-name" style="font-weight:700;">Lucía M.</div>
+            <div class="podio-pts">2,840</div>
+            <div class="podio-place gold-bg">1</div>
           </div>
-          <div class="rank-item" role="listitem">
-            <div class="rank-pos bronze" aria-label="Posición 3">3</div>
-            <div class="rank-av" style="background:#378ADD">SF</div>
-            <div class="rank-name">Sofía Flores</div>
-            <div class="rank-pts">2,200</div>
+          <div class="podio-item" style="order:2;margin-top:40px">
+            <div class="podio-av" style="background:#D85A30">SF</div>
+            <div class="podio-name">Sofía F.</div>
+            <div class="podio-pts">2,200</div>
+            <div class="podio-place bronze-bg">3</div>
           </div>
-          <div class="rank-item" role="listitem">
-            <div class="rank-pos" aria-label="Posición 4">4</div>
-            <div class="rank-av" style="background:#D85A30">JP</div>
-            <div class="rank-name">Javier Paredes</div>
-            <div class="rank-pts">1,980</div>
-          </div>
-          <div class="rank-item" role="listitem">
-            <div class="rank-pos" aria-label="Posición 5">5</div>
-            <div class="rank-av" style="background:#7F77DD">ME</div>
-            <div class="rank-name">María Espinoza</div>
-            <div class="rank-pts">1,750</div>
-          </div>
-          <div class="rank-item me" role="listitem" aria-label="Tu posición">
-            <div class="rank-pos" style="color:var(--green-600)" aria-label="Posición 8">8</div>
-            <div class="rank-av" style="background:var(--green-600)">AV</div>
-            <div class="rank-name" style="font-weight:500;color:var(--green-600)">Tú — Alex Vargas</div>
-            <div class="rank-pts">1,240</div>
-            <div class="rank-badge">Tú</div>
-          </div>
+        </div>
+
+        <div class="rank-list" role="list" id="rank-list-content">
+          <!-- Se llena dinámicamente -->
         </div>
       </div>
     </div>
 
-    <!-- SECCIÓN: PERFIL -->
+    
+    <div id="mis-eventos" class="section">
+      <div class="mis-wrap">
+        <div class="mis-tabs" role="group" aria-label="Filtro de mis eventos">
+          <button class="mis-tab active" onclick="switchMisTab('proximos', this)">Próximos</button>
+          <button class="mis-tab" onclick="switchMisTab('completados', this)">Completados</button>
+        </div>
+        <div id="mis-proximos" class="mis-panel active">
+          <!-- Se llena dinámicamente -->
+        </div>
+        <div id="mis-completados" class="mis-panel">
+          <!-- Se llena dinámicamente -->
+        </div>
+      </div>
+    </div>
+
+    
     <div id="perfil" class="section">
       <div class="profile-wrap">
         <div class="profile-header">
@@ -149,71 +218,154 @@
             <div class="profile-sub">Nivel 4 · Voluntario Activo</div>
             <div class="profile-loc"><i class="ti ti-map-pin" style="font-size:12px;" aria-hidden="true"></i> San Isidro, Lima</div>
           </div>
+          <button class="edit-btn" aria-label="Editar perfil" onclick="showToast('Editar perfil próximamente')">
+            <i class="ti ti-pencil" style="font-size:14px;"></i>
+          </button>
+        </div>
+
+        
+        <div class="level-progress-card">
+          <div class="level-progress-header">
+            <span class="level-chip">Nivel 4</span>
+            <span class="level-next">Próximo: Nivel 5 — Líder Comunitario</span>
+          </div>
+          <div class="level-bar-wrap" role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="1000" aria-label="XP para el siguiente nivel">
+            <div class="level-bar-fill" style="width:6.7%"></div>
+          </div>
+          <div class="level-bar-labels">
+            <span>67 XP</span>
+            <span style="color:var(--color-text-tertiary)">1000 XP para subir</span>
+          </div>
         </div>
 
         <div class="stats-row" role="list">
           <div class="stat-card" role="listitem">
-            <div class="stat-num">12</div>
+            <div class="stat-num" id="stat-eventos">12</div>
             <div class="stat-lbl">Eventos</div>
           </div>
           <div class="stat-card" role="listitem">
-            <div class="stat-num">1,240</div>
+            <div class="stat-num" id="stat-xp">1,240</div>
             <div class="stat-lbl">Puntos XP</div>
           </div>
           <div class="stat-card" role="listitem">
             <div class="stat-num">7</div>
             <div class="stat-lbl">Días racha</div>
           </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-num">#8</div>
+            <div class="stat-lbl">Ranking</div>
+          </div>
         </div>
 
-        <!-- Insignias -->
+       
         <div class="badges-wrap">
-          <div class="badges-title">Insignias</div>
+          <div class="badges-title">Insignias obtenidas</div>
           <div class="badges-grid" role="list">
-            <div class="badge-item" role="listitem">
+            <div class="badge-item" role="listitem" tabindex="0" aria-label="Insignia: Primer paso">
               <div class="badge-circle" style="background:var(--green-50)"><span style="font-size:22px" role="img" aria-label="Planta">🌱</span></div>
               <div class="badge-name" style="color:var(--green-600)">Primer paso</div>
             </div>
-            <div class="badge-item" role="listitem">
+            <div class="badge-item" role="listitem" tabindex="0" aria-label="Insignia: Racha 7 días">
               <div class="badge-circle" style="background:var(--blue-50)"><span style="font-size:22px" role="img" aria-label="Rayo">⚡</span></div>
               <div class="badge-name" style="color:var(--blue-400)">Racha 7d</div>
             </div>
-            <div class="badge-item" role="listitem">
+            <div class="badge-item" role="listitem" tabindex="0" aria-label="Insignia: Top 10">
               <div class="badge-circle" style="background:var(--amber-50)"><span style="font-size:22px" role="img" aria-label="Estrella">⭐</span></div>
               <div class="badge-name" style="color:var(--amber-400)">Top 10</div>
             </div>
-            <div class="badge-item" role="listitem">
+            <div class="badge-item" role="listitem" tabindex="0" aria-label="Insignia: Guardián verde">
+              <div class="badge-circle" style="background:var(--teal-50)"><span style="font-size:22px" role="img" aria-label="Árbol">🌳</span></div>
+              <div class="badge-name" style="color:var(--teal-600)">Guardián verde</div>
+            </div>
+            <div class="badge-item locked-badge" role="listitem" tabindex="0" aria-label="Insignia bloqueada: Líder">
               <div class="badge-circle locked"><i class="ti ti-lock" aria-hidden="true"></i></div>
               <div class="badge-name">Líder</div>
+            </div>
+            <div class="badge-item locked-badge" role="listitem" tabindex="0" aria-label="Insignia bloqueada: Mentor">
+              <div class="badge-circle locked"><i class="ti ti-lock" aria-hidden="true"></i></div>
+              <div class="badge-name">Mentor</div>
+            </div>
+            <div class="badge-item locked-badge" role="listitem" tabindex="0" aria-label="Insignia bloqueada: Héroe">
+              <div class="badge-circle locked"><i class="ti ti-lock" aria-hidden="true"></i></div>
+              <div class="badge-name">Héroe local</div>
+            </div>
+            <div class="badge-item locked-badge" role="listitem" tabindex="0" aria-label="Insignia bloqueada: Leyenda">
+              <div class="badge-circle locked"><i class="ti ti-lock" aria-hidden="true"></i></div>
+              <div class="badge-name">Leyenda</div>
             </div>
           </div>
         </div>
 
-        <!-- Historial -->
+       
         <div class="history-wrap">
           <div class="history-title">Historial de impacto</div>
           <div class="history-item">
-            <div class="history-icon" style="background:var(--coral-50)"><i class="ti ti-droplet" style="color:var(--coral-400);" aria-hidden="true"></i></div>
-            <div class="history-name">Limpieza playa La Herradura</div>
+            <div class="history-icon" style="background:var(--teal-50)"><i class="ti ti-droplet" style="color:var(--teal-400);" aria-hidden="true"></i></div>
+            <div class="history-info">
+              <div class="history-name">Limpieza playa La Herradura</div>
+              <div class="history-date">12 may 2026</div>
+            </div>
             <div class="history-pts">+80 XP</div>
           </div>
           <div class="history-item">
             <div class="history-icon" style="background:var(--blue-50)"><i class="ti ti-device-laptop" style="color:var(--blue-400);" aria-hidden="true"></i></div>
-            <div class="history-name">Hackathon Jóvenes BCP 2026</div>
+            <div class="history-info">
+              <div class="history-name">Hackathon Jóvenes BCP 2026</div>
+              <div class="history-date">5 may 2026</div>
+            </div>
             <div class="history-pts">+200 XP</div>
           </div>
           <div class="history-item">
             <div class="history-icon" style="background:var(--green-50)"><i class="ti ti-book" style="color:var(--green-400);" aria-hidden="true"></i></div>
-            <div class="history-name">Tutoría en Villa El Salvador</div>
+            <div class="history-info">
+              <div class="history-name">Tutoría en Villa El Salvador</div>
+              <div class="history-date">28 abr 2026</div>
+            </div>
             <div class="history-pts">+60 XP</div>
           </div>
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--purple-50)"><i class="ti ti-paw" style="color:var(--purple-400);" aria-hidden="true"></i></div>
+            <div class="history-info">
+              <div class="history-name">Campaña adopción animal</div>
+              <div class="history-date">19 abr 2026</div>
+            </div>
+            <div class="history-pts">+90 XP</div>
+          </div>
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--coral-50)"><i class="ti ti-heart" style="color:var(--coral-400);" aria-hidden="true"></i></div>
+            <div class="history-info">
+              <div class="history-name">Donación de sangre — Clínica Médica</div>
+              <div class="history-date">10 abr 2026</div>
+            </div>
+            <div class="history-pts">+100 XP</div>
+          </div>
         </div>
+
+        
+        <div class="settings-wrap">
+          <div class="settings-title">Configuración</div>
+          <button class="settings-item" onclick="showToast('Notificaciones configuradas')">
+            <i class="ti ti-bell" style="color:var(--green-600);"></i>
+            <span>Notificaciones</span>
+            <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);margin-left:auto;"></i>
+          </button>
+          <button class="settings-item" onclick="showToast('Zona de búsqueda: San Isidro, Lima')">
+            <i class="ti ti-map-pin" style="color:var(--teal-600);"></i>
+            <span>Mi zona</span>
+            <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);margin-left:auto;"></i>
+          </button>
+          <button class="settings-item" onclick="showToast('Comparte Impacto Cerca con tus amigos!')">
+            <i class="ti ti-share" style="color:var(--blue-400);"></i>
+            <span>Invitar amigos</span>
+            <i class="ti ti-chevron-right" style="color:var(--color-text-tertiary);margin-left:auto;"></i>
+          </button>
+        </div>
+
       </div>
     </div>
 
-  </div> <!-- Fin de .app -->
+  </div>
 
-  <!-- Scripts en orden correcto: primero módulos, luego main -->
   <script src="eventos.js"></script>
   <script src="main.js"></script>
 </body>
