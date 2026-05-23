@@ -1,15 +1,43 @@
 
 //@CODEX
 const eventosMock = [
-  { id: 'card1', cat: 'Ambiente', titulo: 'Limpieza del río Rímac', fecha: 'Sáb 24 mayo', dist: '1.2 km', van: 18, xp: 80, icon: 'ti-droplet', color: 'coral' },
-  { id: 'card2', cat: 'Tecnología', titulo: 'Taller de programación para niños', fecha: 'Dom 25 mayo', dist: '0.8 km', van: 11, xp: 120, icon: 'ti-code', color: 'blue' },
-  { id: 'card3', cat: 'Educación', titulo: 'Reforzamiento escolar — Miraflores', fecha: 'Jue 29 mayo', dist: '2.1 km', van: 7, xp: 60, icon: 'ti-book', color: 'green' }
+  { id: 'card1', cat: 'Ambiente', titulo: 'Limpieza del río Rímac', fecha: 'Sáb 24 mayo', dist: '1.2 km', van: 18, xp: 80, icon: 'ti-droplet', color: 'coral', coords: [-12.095, -77.030] },
+  { id: 'card2', cat: 'Tecnología', titulo: 'Taller de programación para niños', fecha: 'Dom 25 mayo', dist: '0.8 km', van: 11, xp: 120, icon: 'ti-code', color: 'blue', coords: [-12.102, -77.038] },
+  { id: 'card3', cat: 'Educación', titulo: 'Reforzamiento escolar — Miraflores', fecha: 'Jue 29 mayo', dist: '2.1 km', van: 7, xp: 60, icon: 'ti-book', color: 'green', coords: [-12.090, -77.025] }
 ];
+
+// ==========================================
+// SISTEMA DE EXPERIENCIA (XP)
+// ==========================================
+let xpUsuario = 67; // XP inicial que tienes en el HTML
+const xpNivel = 1000; // XP necesario para subir de nivel
+
+function actualizarXP(puntos) {
+  // 1. Actualizamos el valor global
+  xpUsuario += puntos;
+  
+  // Evitamos que baje de 0
+  if (xpUsuario < 0) xpUsuario = 0; 
+
+  // 2. Calculamos el nuevo porcentaje de la barra
+  const porcentaje = (xpUsuario / xpNivel) * 100;
+
+  // 3. Actualizamos el HTML (Barra y Texto)
+  const barra = document.querySelector('.xp-bar');
+  const etiqueta = document.querySelector('.xp-label');
+  
+  if (barra && etiqueta) {
+    barra.style.width = `${porcentaje}%`;
+    etiqueta.textContent = `${xpUsuario} / ${xpNivel} XP`;
+  }
+}
 
 //@CODEX
 function renderizarEventos(eventos) {
   const contenedor = document.getElementById('lista-eventos');
   contenedor.innerHTML = '';// Limpiamos lo que haya antes
+
+  actualizarMapa(eventos); // Estado vacío: si no hay eventos...
 
   // Estado vacío: si no hay eventos para la categoría
   if (!eventos || eventos.length === 0) {
@@ -88,21 +116,40 @@ function resetearFiltros() {
   }
 }
 
-// 4. Esta línea carga todos los eventos la primera vez que abres la página
-renderizarEventos(eventosMock);
-
 
 function toggleJoin(cardId, btn) {
+  // Buscamos cuánta XP da este evento específico
+  const evento = eventosMock.find(e => e.id === cardId);
+  const puntos = evento ? evento.xp : 0;
+
   if (btn.classList.contains('joined')) {
+    // Acción: Cancelar inscripción
     btn.classList.remove('joined');
     btn.classList.add('primary');
     btn.textContent = 'Unirme';
+    
+    actualizarXP(-puntos); // Restamos la XP
+    
+    // Restauramos el texto original de XP en la tarjeta
+    const xpText = document.querySelector('#' + cardId + ' .event-xp');
+    if (xpText) { 
+      xpText.style.color = 'var(--amber-400)'; 
+      xpText.innerHTML = `<i class="ti ti-star" aria-hidden="true"></i> +${puntos} XP al unirte`; 
+    }
   } else {
+    // Acción: Inscribirse
     btn.classList.remove('primary');
     btn.classList.add('joined');
     btn.textContent = 'Inscrito';
-    const xp = document.querySelector('#' + cardId + ' .event-xp');
-    if (xp) { xp.style.color = 'var(--green-400)'; xp.innerHTML = '<i class="ti ti-check"></i> XP sumado'; }
+    
+    actualizarXP(puntos); // Sumamos la XP
+    
+    // Cambiamos el texto de la tarjeta a verde
+    const xpText = document.querySelector('#' + cardId + ' .event-xp');
+    if (xpText) { 
+      xpText.style.color = 'var(--green-400)'; 
+      xpText.innerHTML = '<i class="ti ti-check"></i> XP sumado'; 
+    }
   }
 }
 
@@ -140,21 +187,23 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(mapa);
 
-// 3. Coordenadas simuladas para tus 3 eventos de prueba
-const ubicacionesMock = [
-  [-12.095, -77.030], // Limpieza río
-  [-12.102, -77.038], // Taller tech
-  [-12.090, -77.025]  // Reforzamiento escolar
-];
+// Guardamos los pines aquí para poder borrarlos cuando cambies de filtro
+let pinesActuales = [];
 
-// 4. Dibujamos un marcador por cada evento de tu eventosMock
-eventosMock.forEach((evento, index) => {
-  // Creamos el pin
-  const marcador = L.marker(ubicacionesMock[index]).addTo(mapa);
-  
-  // Le agregamos un pequeño globo de texto al hacer clic
-  marcador.bindPopup(`
-    <b>${evento.titulo}</b><br>
-    Recompensa: +${evento.xp} XP
-  `);
-});
+function actualizarMapa(eventosFiltrados) {
+  // 1. Borramos los pines anteriores del mapa
+  pinesActuales.forEach(pin => mapa.removeLayer(pin));
+  pinesActuales = []; 
+
+  // 2. Dibujamos los pines nuevos
+  eventosFiltrados.forEach(evento => {
+    if(evento.coords) {
+      const marcador = L.marker(evento.coords).addTo(mapa)
+        .bindPopup(`<b>${evento.titulo}</b><br>+${evento.xp} XP`);
+      pinesActuales.push(marcador); // Lo guardamos en el arreglo
+    }
+  });
+}
+
+// Arranque inicial de la aplicación (Debe ir siempre al final)
+renderizarEventos(eventosMock);
