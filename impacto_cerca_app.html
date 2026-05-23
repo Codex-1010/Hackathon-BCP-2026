@@ -2,11 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Impacto Cerca</title>
   <link rel="stylesheet" href="styless.css">
+  <!-- Tabler Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
 </head>
 <body>
-
   <!-- Encabezado de la aplicación -->
   <header>
     <h2 class="sr-only">Impacto Cerca — App de voluntariado y participación comunitaria para jóvenes</h2>
@@ -43,10 +45,10 @@
       <div class="nav-tab active" role="tab" aria-selected="true" onclick="switchTab('explorar', this)">
         <i class="ti ti-map-2" aria-hidden="true"></i>Explorar
       </div>
-      <div class="nav-tab" role="tab" onclick="switchTab('ranking', this)">
+      <div class="nav-tab" role="tab" aria-selected="false" onclick="switchTab('ranking', this)">
         <i class="ti ti-trophy" aria-hidden="true"></i>Ranking
       </div>
-      <div class="nav-tab" role="tab" onclick="switchTab('perfil', this)">
+      <div class="nav-tab" role="tab" aria-selected="false" onclick="switchTab('perfil', this)">
         <i class="ti ti-user-circle" aria-hidden="true"></i>Mi perfil
       </div>
     </div>
@@ -56,7 +58,7 @@
       <div class="search-wrap">
         <div class="search-inner">
           <i class="ti ti-search" aria-hidden="true"></i>
-          <input type="text" placeholder="Buscar eventos, causas..." aria-label="Buscar eventos">
+          <input type="text" placeholder="Buscar eventos, causas..." aria-label="Buscar eventos" autocomplete="off">
         </div>
       </div>
 
@@ -67,7 +69,7 @@
         <div class="chip" onclick="filterChip(this)"><i class="ti ti-school" aria-hidden="true"></i> Educación</div>
         <div class="chip" onclick="filterChip(this)"><i class="ti ti-device-laptop" aria-hidden="true"></i> Tecnología</div>
         <div class="chip" onclick="filterChip(this)"><i class="ti ti-paw" aria-hidden="true"></i> Animales</div>
-        <div class="chip" onclick="filterChip(this)"><i class="ti ti-heart" aria-hidden="true"></i> Social</div>
+        <div class="chip" onclick="filterChip(this)"><i class="ti ti-heart" aria-hidden="true"></i> Salud</div>
       </div>
 
       <!-- Mapa -->
@@ -103,8 +105,9 @@
 
       <!-- Lista de Eventos -->
       <div class="events-list" id="lista-eventos">
-
+        <!-- Se llena dinámicamente con eventos.js -->
       </div>
+    </div>
 
     <!-- SECCIÓN: RANKING -->
     <div id="ranking" class="section">
@@ -233,6 +236,8 @@
 
   </div> <!-- Fin de .app -->
 
+  <!-- Scripts en orden correcto: primero módulos, luego main -->
+  <script src="eventos.js"></script>
   <script src="main.js"></script>
 </body>
-</html>   
+</html>
