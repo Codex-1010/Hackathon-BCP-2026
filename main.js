@@ -123,4 +123,80 @@ function datosSimulacion(){
   
   
 }
+
+
   */
+
+// ==========================================
+// CONFIGURACIÓN DEL MAPA INTERACTIVO @CODEX
+// ==========================================
+
+// 1. Inicializamos el mapa en el contenedor y lo centramos en San Isidro, Lima
+const mapa = L.map('contenedor-mapa').setView([-12.097, -77.035], 14);
+
+// 2. Cargamos la capa de calles de OpenStreetMap (Gratis y sin API key)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© OpenStreetMap'
+}).addTo(mapa);
+
+// 3. Coordenadas simuladas para tus 3 eventos de prueba
+const ubicacionesMock = [
+  [-12.095, -77.030], // Limpieza río
+  [-12.102, -77.038], // Taller tech
+  [-12.090, -77.025]  // Reforzamiento escolar
+];
+
+// 4. Dibujamos un marcador por cada evento de tu eventosMock
+eventosMock.forEach((evento, index) => {
+  // Creamos el pin
+  const marcador = L.marker(ubicacionesMock[index]).addTo(mapa);
+  
+  // Le agregamos un pequeño globo de texto al hacer clic
+  marcador.bindPopup(`
+    <b>${evento.titulo}</b><br>
+    Recompensa: +${evento.xp} XP
+  `);
+});
+
+ //funcion para la barra de exp
+ let xpActual = 67;
+ const xpMaximo = 1000;
+
+ //funcion actualizar barra
+ function actualizarBarra(){
+    const barra = document.getElementById("progreso-bar");
+    const texto = document.getElementById("xp-texto");
+    const contenedorBarra = document.querySelector(".xp-bar-wrap");
+
+    //operacion para calcular el xp
+    const porcentaje = (xpActual / xpMaximo) * 100;
+
+    barra.style.width = `${Math.min(porcentaje, 100)}%`;
+
+    texto.textContent = `${xpActual} / ${xpMaximo} XP`;
+
+    if(contenedorBarra){
+        contenedorBarra.setAttribute("aria-valuenow", xpActual);
+    }
+ }
+
+ function toggleJoin(cardId, boton){
+  const idEvento = parseInt(cardId.replace("card",""));
+
+  const evento = eventosMock.find(e => e.id === idEvento);
+
+  if(!evento ) return;
+
+  if(!boton.classList.contains("joined")){
+      boton.classList.add("joined");
+      boton.textContent = "Inscrito";
+      boton.style.background = "var(--teal-600)";
+
+      xpActual += evento.xp;
+
+      console.log('!Te uniste a: ')
+
+  }
+
+ }
