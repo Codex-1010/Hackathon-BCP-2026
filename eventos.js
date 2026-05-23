@@ -246,48 +246,61 @@ function openModal(id) {
   const ev = eventosMock.find(e => e.id === id);
   if (!ev) return;
 
+  const contenedor = document.getElementById('modal-content');
+  if (!contenedor) return;
+
   const inscrito = inscritoIds.has(ev.id);
-  const pct = Math.round((ev.van / ev.cupo) * 100);
+  const ocupado = ev.van >= ev.cupo;
 
-  const content = document.getElementById('modal-content');
-  content.innerHTML = `
-    <div class="modal-icon" style="background:var(--${ev.color}-50)">
-      <i class="ti ${ev.icon}" style="color:var(--${ev.color}-400);font-size:32px;" aria-hidden="true"></i>
-    </div>
-    <div class="modal-cat" style="color:var(--${ev.color}-400)">${ev.cat}</div>
-    <h2 class="modal-title">${ev.titulo}</h2>
-    <p class="modal-desc">${ev.desc}</p>
+  // Codificamos el texto del lugar de forma segura para usarlo como parámetro de la URL
+  const direccionCodificada = encodeURIComponent(ev.lugar + ", Lima, Peru");
 
-    <div class="modal-details">
-      <div class="modal-detail-row"><i class="ti ti-calendar"></i><span>${ev.fecha} · ${ev.hora}</span></div>
-      <div class="modal-detail-row"><i class="ti ti-map-pin"></i><span>${ev.lugar} (${ev.dist})</span></div>
-      <div class="modal-detail-row"><i class="ti ti-building"></i><span>${ev.organizador}</span></div>
+  contenedor.innerHTML = `
+    <div class="modal-header">
+      <div class="modal-cat" style="color:var(--${ev.color}-400)">${ev.cat}</div>
+      <h2 class="modal-title">${ev.titulo}</h2>
+      <div class="modal-org">Organizado por <strong>${ev.organizador}</strong></div>
     </div>
 
-    <div class="modal-tags">
-      ${ev.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-    </div>
-
-    <div class="modal-cupo-wrap">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-        <span style="font-size:12px;color:var(--color-text-secondary);">Voluntarios</span>
-        <span style="font-size:12px;font-weight:600;color:var(--${ev.color}-400)">${ev.van} / ${ev.cupo}</span>
+    <div class="modal-body">
+      <p class="modal-desc">${ev.desc}</p>
+      
+      <div class="modal-meta-grid">
+        <div class="meta-item"><i class="ti ti-calendar"></i> ${ev.fecha}</div>
+        <div class="meta-item"><i class="ti ti-clock"></i> ${ev.hora}</div>
+        <div class="meta-item"><i class="ti ti-map-pin"></i> ${ev.lugar} (${ev.dist})</div>
       </div>
-      <div class="cupo-bar-wrap">
-        <div class="cupo-bar-fill" style="width:${pct}%;background:var(--${ev.color}-400);"></div>
+
+      <div class="modal-mapa-container">
+        <iframe 
+          src="http://localhost:3000/generar-mapa?direccion=${direccionCodificada}" 
+          width="100%" 
+          height="100%" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <div class="modal-tags">
+        ${ev.tags.map(t => `<span class="tag">#${t}</span>`).join('')}
       </div>
     </div>
 
-    <button class="modal-join-btn ${inscrito ? 'joined' : 'primary'}"
-      id="modal-join-${ev.id}"
-      onclick="toggleJoinModal('${ev.id}', this)"
-      aria-pressed="${inscrito}">
-      ${inscrito ? '✓ Ya estás inscrito — cancelar' : `Unirme · +${ev.xp} XP`}
-    </button>
+    <div class="modal-footer">
+      <div class="modal-xp-reward"><i class="ti ti-star"></i> +${ev.xp} XP</div>
+      ${ocupado && !inscrito 
+        ? `<button class="join-btn modal-join-btn" disabled>Cupo lleno</button>`
+        : `<button class="join-btn modal-join-btn ${inscrito ? 'joined' : 'primary'}" onclick="toggleJoin('${ev.id}', this, true)">
+            ${inscrito ? '✓ Inscrito — Cancelar' : `Unirme`}
+           </button>`
+      }
+    </div>
   `;
 
-  document.getElementById('modal-overlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
+  const overlay = document.getElementById('modal-overlay');
+  if (overlay) overlay.classList.add('show');
 }
 
 function closeModal() {
