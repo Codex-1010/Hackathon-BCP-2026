@@ -12,8 +12,6 @@
     --blue-50: #E6F1FB; --blue-400: #378ADD; --blue-800: #0C447C;
   }
 
-  .app { max-width: 680px; }
-
   .header {
     background: var(--green-600);
     color: white;
@@ -252,7 +250,7 @@
     --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
-  .app { max-width: 680px; margin: 0 auto; }
+  .app { max-width: auto; margin: 0 auto; }
 
   /* ========== HEADER ========== */
   .header {
