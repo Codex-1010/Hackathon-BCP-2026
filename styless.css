@@ -147,3 +147,77 @@
   .rank-name { flex: 1; font-size: 14px; color: var(--color-text-primary); }
   .rank-pts { font-size: 13px; font-weight: 500; color: var(--amber-400); }
   .rank-badge { font-size: 11px; background: var(--amber-50); color: var(--amber-800); padding: 2px 8px; border-radius: 99px; }
+
+  /* --- MEJORAS DE FEEDBACK VISUAL (DCU) --- */
+
+/* Transición global para interactivos */
+.chip, .nav-tab, .join-btn, .event-card {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efecto Hover en las tarjetas de eventos */
+.event-card:hover {
+  border-color: var(--green-400);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Efecto Hover en las pestañas de navegación */
+.nav-tab:hover:not(.active) {
+  color: var(--green-400);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* Efecto Hover y Active en los Chips de Filtros */
+.chip:hover:not(.active) {
+  background: var(--color-background-secondary);
+  border-color: var(--color-border-secondary);
+  transform: scale(1.03);
+}
+.chip:active {
+  transform: scale(0.97);
+}
+
+/* Estados del botón de inscripción */
+.join-btn:active {
+  transform: scale(0.95);
+}
+
+/* --- ESTADO VACÍO ILUSTRATIVO --- */
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--color-background-primary);
+  border: 1px dashed var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  margin-top: 10px;
+}
+
+.empty-state-icon {
+  font-size: 42px;
+  color: var(--color-text-tertiary);
+  margin-bottom: 12px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty-state-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.empty-state-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  max-width: 280px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
