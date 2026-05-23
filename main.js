@@ -9,11 +9,20 @@ const eventosMock = [
 //@CODEX
 function renderizarEventos(eventos) {
   const contenedor = document.getElementById('lista-eventos');
-  contenedor.innerHTML = ''; // Limpiamos lo que haya antes
+  contenedor.innerHTML = '';// Limpiamos lo que haya antes
 
   // Estado vacío: si no hay eventos para la categoría
-  if (eventos.length === 0) {
-    contenedor.innerHTML = '<p style="text-align:center; padding: 20px; color: gray;">No hay eventos en esta categoría aún.</p>';
+  if (!eventos || eventos.length === 0) {
+    contenedor.innerHTML = `
+      <div class="empty-state-container">
+        <div class="empty-state-icon">
+          <i class="ti ti-calendar-off"></i>
+        </div>
+        <div class="empty-state-title">No hay eventos disponibles</div>
+        <div class="empty-state-text">Por ahora no tenemos actividades programadas aquí. ¡Prueba explorando otras categorías!</div>
+        <button class="join-btn primary" style="margin-top: 14px;" onclick="resetearFiltros()">Ver todos los eventos</button>
+      </div>
+    `;
     return;
   }
 
@@ -55,19 +64,27 @@ function switchTab(name, el) {
 }
 
 function filterChip(el) {
-  // 1. Cambia el estilo del botón activo
+  // 1. Cambia el estilo del botón activo para feedback inmediato
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
 
-  // 2. Lee el texto del chip que clickeaste (ej. "Todos", "Ambiente")
-  const categoriaSeleccionada = el.innerText.trim();
+  // 2. Extraer solo el texto ignorando los nodos del icono de Tabler
+  const categoriaSeleccionada = el.lastChild.textContent.trim();
 
-  // 3. Filtra el arreglo y re-dibuja
+  // 3. Filtrar el arreglo simulado y re-dibujar
   if (categoriaSeleccionada === 'Todos') {
     renderizarEventos(eventosMock);
   } else {
     const filtrados = eventosMock.filter(evento => evento.cat === categoriaSeleccionada);
     renderizarEventos(filtrados);
+  }
+}
+
+// Función de auxilio para el botón del Estado Vacío
+function resetearFiltros() {
+  const chipTodos = document.querySelector('.filter-strip .chip:first-child');
+  if (chipTodos) {
+    filterChip(chipTodos);
   }
 }
 

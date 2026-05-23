@@ -1,0 +1,45 @@
+const eventosMock = [
+  { id: 1, titulo: "Limpieza del río Rímac",           categoria: "Ambiente",   xp: 80,  distancia: "1.2 km" },
+  { id: 2, titulo: "Taller de programación pa' niños", categoria: "Tecnología", xp: 120, distancia: "0.8 km" },
+  { id: 3, titulo: "Campaña de adopción animal",        categoria: "Animales",   xp: 90,  distancia: "2.1 km" },
+  { id: 4, titulo: "Donación de sangre",                categoria: "Salud",      xp: 100, distancia: "3.5 km" },
+];
+
+function renderEventos(lista) {
+  const contenedor = document.querySelector('.events-list');
+  contenedor.innerHTML = '';
+
+  if (lista.length === 0) {
+    contenedor.innerHTML = '<p class="empty-state">No hay eventos por aquí todavía </p>';
+    return;
+  }
+
+  lista.forEach(evento => {
+    const card = document.createElement('div');
+    card.classList.add('event-card');
+
+    card.innerHTML = `
+      <h3>${evento.titulo}</h3>
+      <span class="categoria">${evento.categoria}</span>
+      <p class="distancia"> ¡ ${evento.distancia}</p>
+      <p class="xp">+${evento.xp} XP</p>
+      <button onclick="unirme(${evento.id})">Unirme</button>
+    `;
+
+    contenedor.appendChild(card);
+  });
+}
+
+renderEventos(eventosMock);
+
+
+async function cargarEventos() {
+  try {
+    const res  = await fetch('/api/eventos');
+    const data = await res.json();
+    renderEventos(data);
+  } catch (err) {
+    console.error('no se pudo cargar los eventos:', err);
+    renderEventos([]);
+  }
+}
